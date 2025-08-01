@@ -5,26 +5,23 @@ using FivetranClient.Models;
 
 namespace FivetranClient;
 
-public class RestApiManager(HttpRequestHandler requestHandler) : IDisposable
+public class RestApiManager : IDisposable
 {
-    private readonly PaginatedFetcher _paginatedFetcher = new(requestHandler);
-    private readonly NonPaginatedFetcher _nonPaginatedFetcher = new(requestHandler);
+    private readonly PaginatedFetcher _paginatedFetcher;
+    private readonly NonPaginatedFetcher _nonPaginatedFetcher;
     // Indicates whether this instance owns the HttpClient and should dispose it.
     private readonly HttpClient? _createdClient;
 
     private static readonly Uri ApiBaseUrl = new("https://api.fivetran.com/v1/");
 
     public RestApiManager(string apiKey, string apiSecret, TimeSpan timeout)
-        : this(ApiBaseUrl, apiKey, apiSecret, timeout)
     {
+        var client = new FivetranHttpClient(ApiBaseUrl, apiKey, apiSecret, timeout);
+        var requestHandler = new HttpRequestHandler(client);
+        _paginatedFetcher = new PaginatedFetcher(requestHandler);
+        _nonPaginatedFetcher = new NonPaginatedFetcher(requestHandler);
+        _createdClient = client;
     }
-
-    public RestApiManager(Uri baseUrl, string apiKey, string apiSecret, TimeSpan timeout)
-        : this(new FivetranHttpClient(baseUrl, apiKey, apiSecret, timeout))
-    {
-    }
-
-    private RestApiManager(HttpClient client) : this(new HttpRequestHandler(client)) => _createdClient = client;
 
     public IAsyncEnumerable<Group> GetGroupsAsync(CancellationToken cancellationToken)
     {
