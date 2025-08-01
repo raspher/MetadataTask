@@ -26,7 +26,7 @@ public class FivetranHttpClient : HttpClient
     {
     }
 
-    public string CalculateToken(string apiKey, string apiSecret)
+    private static string CalculateToken(string apiKey, string apiSecret)
     {
         return Convert.ToBase64String(Encoding.ASCII.GetBytes($"{apiKey}:{apiSecret}"));
     }

@@ -12,7 +12,7 @@ public class RestApiManager(HttpRequestHandler requestHandler) : IDisposable
     // Indicates whether this instance owns the HttpClient and should dispose it.
     private readonly HttpClient? _createdClient;
 
-    public static readonly Uri ApiBaseUrl = new("https://api.fivetran.com/v1/");
+    private static readonly Uri ApiBaseUrl = new("https://api.fivetran.com/v1/");
 
     public RestApiManager(string apiKey, string apiSecret, TimeSpan timeout)
         : this(ApiBaseUrl, apiKey, apiSecret, timeout)

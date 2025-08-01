@@ -9,7 +9,7 @@ public class HttpRequestHandler
     private readonly SemaphoreSlim? _semaphore;
     private readonly object _lock = new();
     private DateTime _retryAfterTime = DateTime.UtcNow;
-    private static TtlDictionary<string, HttpResponseMessage> _responseCache = new();
+    private static readonly TtlDictionary<string, HttpResponseMessage> ResponseCache = new();
 
     /// <summary>
     /// Handles HttpTooManyRequests responses by limiting the number of concurrent requests and managing retry logic.
@@ -30,7 +30,7 @@ public class HttpRequestHandler
     public async Task<HttpResponseMessage> GetAsync(string url, CancellationToken cancellationToken)
     {
         var result = await _GetAsync(url, cancellationToken);
-        return _responseCache.GetOrAdd(
+        return ResponseCache.GetOrAdd(
             url,
             () => result,
             TimeSpan.FromMinutes(60));
