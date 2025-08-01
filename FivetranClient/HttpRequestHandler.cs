@@ -29,6 +29,11 @@ public class HttpRequestHandler
 
     public async Task<HttpResponseMessage> GetAsync(string url, CancellationToken cancellationToken)
     {
+        if (ResponseCache.TryGetValue(url, out var cachedResponse) && cachedResponse != null)
+        {
+            return cachedResponse;
+        }
+        
         var result = await _GetAsync(url, cancellationToken);
         return ResponseCache.GetOrAdd(
             url,
