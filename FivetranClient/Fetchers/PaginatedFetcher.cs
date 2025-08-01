@@ -58,7 +58,7 @@ public sealed class PaginatedFetcher(HttpRequestHandler requestHandler) : BaseFe
             yield return item;
         }
 
-        await foreach (var nextItem in nextResults.WithCancellation(cancellationToken))
+        await foreach (var nextItem in nextResults)
         {
             cancellationToken.ThrowIfCancellationRequested();
             yield return nextItem;
