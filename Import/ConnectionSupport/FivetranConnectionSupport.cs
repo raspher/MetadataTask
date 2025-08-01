@@ -60,7 +60,7 @@ public class FivetranConnectionSupport : IConnectionSupport
             .GetGroupsAsync(CancellationToken.None)
             .ToBlockingEnumerable()
             .ToList();
-        if (!groups.Any())
+        if (groups.Count == 0)
         {
             throw new Exception("No groups found in Fivetran account.");
         }
@@ -102,7 +102,7 @@ public class FivetranConnectionSupport : IConnectionSupport
             .GetConnectorsAsync(groupId, CancellationToken.None)
             .ToBlockingEnumerable()
             .ToList();
-        if (!connectors.Any())
+        if (connectors.Count == 0)
         {
             throw new Exception("No connectors found in the selected group.");
         }
