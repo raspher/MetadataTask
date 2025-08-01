@@ -40,7 +40,7 @@ public sealed class PaginatedFetcher(HttpRequestHandler requestHandler) : BaseFe
         IAsyncEnumerable<T>? nextResults = null;
         if (!string.IsNullOrWhiteSpace(nextCursor))
         {
-            // fire and forget (await after yielding current items)
+            // fire next page and await after yielding current items
             var nextTask = FetchPageAsync<T>(endpoint, cancellationToken, nextCursor);
             nextResults = ProcessPagesRecursivelyAsync(endpoint, nextTask, cancellationToken);
         }
