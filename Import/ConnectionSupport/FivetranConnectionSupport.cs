@@ -58,7 +58,8 @@ public class FivetranConnectionSupport : IConnectionSupport
         using var restApiManager = new RestApiManager(details.ApiKey, details.ApiSecret, TimeSpan.FromSeconds(40));
         var groups = restApiManager
             .GetGroupsAsync(CancellationToken.None)
-            .ToBlockingEnumerable();
+            .ToBlockingEnumerable()
+            .ToList();
         if (!groups.Any())
         {
             throw new Exception("No groups found in Fivetran account.");
@@ -99,7 +100,8 @@ public class FivetranConnectionSupport : IConnectionSupport
 
         var connectors = restApiManager
             .GetConnectorsAsync(groupId, CancellationToken.None)
-            .ToBlockingEnumerable();
+            .ToBlockingEnumerable()
+            .ToList();
         if (!connectors.Any())
         {
             throw new Exception("No connectors found in the selected group.");
