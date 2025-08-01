@@ -32,7 +32,7 @@ public class RestApiManager(HttpRequestHandler requestHandler) : IDisposable
 
     public IAsyncEnumerable<Group> GetGroupsAsync(CancellationToken cancellationToken)
     {
-        var endpointPath = "groups";
+        const string endpointPath = "groups";
         return _paginatedFetcher.FetchItemsAsync<Group>(endpointPath, cancellationToken);
     }
 
