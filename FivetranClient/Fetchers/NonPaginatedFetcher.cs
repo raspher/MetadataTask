@@ -10,6 +10,6 @@ public sealed class NonPaginatedFetcher(HttpRequestHandler requestHandler) : Bas
         var response = await RequestHandler.GetAsync(endpoint, cancellationToken);
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
         var root = JsonSerializer.Deserialize<NonPaginatedRoot<T>>(content, SerializerOptions);
-        return root is null ? default(T) : root.Data;
+        return root is null ? default : root.Data;
     }
 }
