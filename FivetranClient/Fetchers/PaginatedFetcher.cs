@@ -11,8 +11,8 @@ public sealed class PaginatedFetcher(HttpRequestHandler requestHandler) : BaseFe
 
     public IAsyncEnumerable<T> FetchItemsAsync<T>(string endpoint, CancellationToken cancellationToken)
     {
-        var firstPageTask = this.FetchPageAsync<T>(endpoint, cancellationToken);
-        return this.ProcessPagesRecursivelyAsync(endpoint, firstPageTask, cancellationToken);
+        var firstPageTask = FetchPageAsync<T>(endpoint, cancellationToken);
+        return ProcessPagesRecursivelyAsync(endpoint, firstPageTask, cancellationToken);
     }
 
     private async Task<PaginatedRoot<T>?> FetchPageAsync<T>(
@@ -21,8 +21,8 @@ public sealed class PaginatedFetcher(HttpRequestHandler requestHandler) : BaseFe
         string? cursor = null)
     {
         var response = cursor is null
-            ? await base.RequestHandler.GetAsync($"{endpoint}?limit={PageSize}", cancellationToken)
-            : await base.RequestHandler.GetAsync($"{endpoint}?limit={PageSize}&cursor={WebUtility.UrlEncode(cursor)}", cancellationToken);
+            ? await RequestHandler.GetAsync($"{endpoint}?limit={PageSize}", cancellationToken)
+            : await RequestHandler.GetAsync($"{endpoint}?limit={PageSize}&cursor={WebUtility.UrlEncode(cursor)}", cancellationToken);
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonSerializer.Deserialize<PaginatedRoot<T>>(content, SerializerOptions);
     }
@@ -41,8 +41,8 @@ public sealed class PaginatedFetcher(HttpRequestHandler requestHandler) : BaseFe
         if (!string.IsNullOrWhiteSpace(nextCursor))
         {
             // fire and forget (await after yielding current items)
-            var nextTask = this.FetchPageAsync<T>(endpoint, cancellationToken, nextCursor);
-            nextResults = this.ProcessPagesRecursivelyAsync(endpoint, nextTask, cancellationToken);
+            var nextTask = FetchPageAsync<T>(endpoint, cancellationToken, nextCursor);
+            nextResults = ProcessPagesRecursivelyAsync(endpoint, nextTask, cancellationToken);
         }
 
         foreach (var item in currentPage?.Data?.Items ?? [])

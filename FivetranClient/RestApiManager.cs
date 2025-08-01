@@ -24,7 +24,7 @@ public class RestApiManager(HttpRequestHandler requestHandler) : IDisposable
     {
     }
 
-    private RestApiManager(HttpClient client, bool _) : this(new HttpRequestHandler(client)) => this._createdClient = client;
+    private RestApiManager(HttpClient client, bool _) : this(new HttpRequestHandler(client)) => _createdClient = client;
 
     public RestApiManager(HttpClient client) : this(new HttpRequestHandler(client))
     {
@@ -33,13 +33,13 @@ public class RestApiManager(HttpRequestHandler requestHandler) : IDisposable
     public IAsyncEnumerable<Group> GetGroupsAsync(CancellationToken cancellationToken)
     {
         var endpointPath = "groups";
-        return this._paginatedFetcher.FetchItemsAsync<Group>(endpointPath, cancellationToken);
+        return _paginatedFetcher.FetchItemsAsync<Group>(endpointPath, cancellationToken);
     }
 
     public IAsyncEnumerable<Connector> GetConnectorsAsync(string groupId, CancellationToken cancellationToken)
     {
         var endpointPath = $"groups/{WebUtility.UrlEncode(groupId)}/connectors";
-        return this._paginatedFetcher.FetchItemsAsync<Connector>(endpointPath, cancellationToken);
+        return _paginatedFetcher.FetchItemsAsync<Connector>(endpointPath, cancellationToken);
     }
 
     public async Task<DataSchemas?> GetConnectorSchemasAsync(
@@ -47,7 +47,7 @@ public class RestApiManager(HttpRequestHandler requestHandler) : IDisposable
         CancellationToken cancellationToken)
     {
         var endpointPath = $"connectors/{WebUtility.UrlEncode(connectorId)}/schemas";
-        return await this._nonPaginatedFetcher.FetchAsync<DataSchemas>(endpointPath, cancellationToken);
+        return await _nonPaginatedFetcher.FetchAsync<DataSchemas>(endpointPath, cancellationToken);
     }
 
     public void Dispose()

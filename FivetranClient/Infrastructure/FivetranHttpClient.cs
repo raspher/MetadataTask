@@ -10,15 +10,15 @@ public class FivetranHttpClient : HttpClient
         if (timeout.Ticks <= 0)
             throw new ArgumentOutOfRangeException(nameof(timeout), "Timeout must be a positive value");
 
-        this.DefaultRequestHeaders.Clear();
-        this.BaseAddress = baseAddress;
-        this.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Basic", this.CalculateToken(apiKey, apiSecret));
-        this.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        DefaultRequestHeaders.Clear();
+        BaseAddress = baseAddress;
+        DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Basic", CalculateToken(apiKey, apiSecret));
+        DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         // we need to set Agent Header because otherwise sometimes it may be blocked by the server
         // see: https://repost.aws/knowledge-center/waf-block-http-requests-no-user-agent
-        this.DefaultRequestHeaders.UserAgent.ParseAdd("aseduigbn");
-        this.Timeout = timeout;
+        DefaultRequestHeaders.UserAgent.ParseAdd("aseduigbn");
+        Timeout = timeout;
     }
 
     public FivetranHttpClient(Uri baseAddress, string apiKey, string apiSecret)
