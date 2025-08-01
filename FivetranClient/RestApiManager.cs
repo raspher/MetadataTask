@@ -20,15 +20,11 @@ public class RestApiManager(HttpRequestHandler requestHandler) : IDisposable
     }
 
     public RestApiManager(Uri baseUrl, string apiKey, string apiSecret, TimeSpan timeout)
-        : this(new FivetranHttpClient(baseUrl, apiKey, apiSecret, timeout), true)
+        : this(new FivetranHttpClient(baseUrl, apiKey, apiSecret, timeout))
     {
     }
 
-    private RestApiManager(HttpClient client, bool _) : this(new HttpRequestHandler(client)) => _createdClient = client;
-
-    public RestApiManager(HttpClient client) : this(new HttpRequestHandler(client))
-    {
-    }
+    private RestApiManager(HttpClient client) : this(new HttpRequestHandler(client)) => _createdClient = client;
 
     public IAsyncEnumerable<Group> GetGroupsAsync(CancellationToken cancellationToken)
     {
