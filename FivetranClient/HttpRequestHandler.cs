@@ -23,7 +23,7 @@ public class HttpRequestHandler
         _client = client;
         if (maxConcurrentRequests > 0)
         {
-            _semaphore = new SemaphoreSlim(0, maxConcurrentRequests);
+            _semaphore = new SemaphoreSlim(1, maxConcurrentRequests);
         }
     }
 
