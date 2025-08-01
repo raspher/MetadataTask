@@ -21,6 +21,7 @@ public class FivetranHttpClient : HttpClient
         Timeout = timeout;
     }
 
+    // timeout shouldn't be hardcoded but taken from configuration
     public FivetranHttpClient(Uri baseAddress, string apiKey, string apiSecret)
         : this(baseAddress, apiKey, apiSecret, TimeSpan.FromSeconds(40))
     {
