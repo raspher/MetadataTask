@@ -27,6 +27,7 @@ public class HttpRequestHandler
         }
     }
 
+    // todo: ttl should not be hardcoded but taken from configuration
     public async Task<HttpResponseMessage> GetAsync(string url, CancellationToken cancellationToken)
     {
         if (ResponseCache.TryGetValue(url, out var cachedResponse) && cachedResponse != null)
@@ -41,6 +42,8 @@ public class HttpRequestHandler
             TimeSpan.FromMinutes(60));
     }
 
+    // todo: retry after, from configuration
+    // todo: retry limit, from configuration
     private async Task<HttpResponseMessage> _GetAsync(string url, CancellationToken cancellationToken)
     {
         if (_semaphore is not null)

@@ -17,11 +17,12 @@ public class FivetranHttpClient : HttpClient
         DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         // we need to set Agent Header because otherwise sometimes it may be blocked by the server
         // see: https://repost.aws/knowledge-center/waf-block-http-requests-no-user-agent
+        // todo: UserAgent shouldn't be hardcoded, but from configuration
         DefaultRequestHeaders.UserAgent.ParseAdd("aseduigbn");
         Timeout = timeout;
     }
 
-    // timeout shouldn't be hardcoded but taken from configuration
+    // todo: timeout shouldn't be hardcoded but taken from configuration
     public FivetranHttpClient(Uri baseAddress, string apiKey, string apiSecret)
         : this(baseAddress, apiKey, apiSecret, TimeSpan.FromSeconds(40))
     {

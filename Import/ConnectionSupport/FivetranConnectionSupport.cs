@@ -26,6 +26,7 @@ public class FivetranConnectionSupport : IConnectionSupport
             throw new ArgumentException("Invalid connection details provided.");
         }
 
+        // todo: if it's always returning wrapper, why we always check the type?
         return new RestApiManagerWrapper(
             new RestApiManager(
                 details.ApiKey,
@@ -88,18 +89,16 @@ public class FivetranConnectionSupport : IConnectionSupport
         return selectedGroup.Id;
     }
 
+    // todo: this should be task with cancellation token provided
     public void RunImport(object? connection)
     {
-        if (connection is not RestApiManagerWrapper restApiManagerWrapper)
+        if (connection is not RestApiManagerWrapper restApiManager)
         {
             throw new ArgumentException("Invalid connection type provided.");
         }
 
-        var restApiManager = restApiManagerWrapper.RestApiManager;
-        var groupId = restApiManagerWrapper.GroupId;
-
         var connectors = restApiManager
-            .GetConnectorsAsync(groupId, CancellationToken.None)
+            .GetConnectorsAsync(CancellationToken.None)
             .ToBlockingEnumerable()
             .ToList();
         if (connectors.Count == 0)
@@ -107,6 +106,7 @@ public class FivetranConnectionSupport : IConnectionSupport
             throw new Exception("No connectors found in the selected group.");
         }
 
+        // todo: .Result should be avoided, why not await it in Task.WhenAll(connectors.Select( async connector => ?
         var allMappingsBuffer = "Lineage mappings:\n";
         Parallel.ForEach(connectors, connector =>
         {
