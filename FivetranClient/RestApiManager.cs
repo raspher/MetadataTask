@@ -15,12 +15,25 @@ public class RestApiManager : IDisposable
     private static readonly Uri ApiBaseUrl = new("https://api.fivetran.com/v1/");
 
     public RestApiManager(string apiKey, string apiSecret, TimeSpan timeout)
+        : this(ApiBaseUrl, apiKey, apiSecret, timeout)
     {
-        var client = new FivetranHttpClient(ApiBaseUrl, apiKey, apiSecret, timeout);
-        var requestHandler = new HttpRequestHandler(client);
+    }
+
+    public RestApiManager(Uri baseUrl, string apiKey, string apiSecret, TimeSpan timeout)
+        : this(new FivetranHttpClient(baseUrl, apiKey, apiSecret, timeout), true)
+    {
+    }
+
+    private RestApiManager(HttpClient client, bool _) : this(new HttpRequestHandler(client)) => _createdClient = client;
+
+    public RestApiManager(HttpClient client) : this(new HttpRequestHandler(client))
+    {
+    }
+
+    public RestApiManager(HttpRequestHandler requestHandler)
+    {
         _paginatedFetcher = new PaginatedFetcher(requestHandler);
         _nonPaginatedFetcher = new NonPaginatedFetcher(requestHandler);
-        _createdClient = client;
     }
 
     public IAsyncEnumerable<Group> GetGroupsAsync(CancellationToken cancellationToken)
