@@ -2,8 +2,8 @@
 
 public class Connector
 {
-    public string Id { get; set; }
-    public string Service { get; set; }
-    public string Schema { get; set; }
+    public required string Id { get; set; }
+    public string Service { get; set; } = string.Empty;
+    public string Schema { get; set; } = string.Empty;
     public bool? Paused { get; set; }
 }

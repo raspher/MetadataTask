@@ -79,7 +79,7 @@ public class FivetranConnectionSupport : IConnectionSupport
         if (string.IsNullOrWhiteSpace(input)
             || !int.TryParse(input, out var selectedIndex)
             || selectedIndex < 1
-            || selectedIndex > groups.Count())
+            || selectedIndex > groups.Count)
         {
             throw new ArgumentException("Invalid group selection.");
         }
